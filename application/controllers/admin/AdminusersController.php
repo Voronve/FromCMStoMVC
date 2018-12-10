@@ -66,10 +66,11 @@ class AdminusersController extends \ItForFree\SimpleMVC\mvc\Controller
     {
         $id = $_GET['id'];
         $Url = Config::get('core.url.class');
-        
         if (!empty($_POST)) { // это выполняется нормально.
-            
             if (!empty($_POST['saveChanges'] )) {
+				/*foreach ($_POST as $name => $post){
+					echo $name . ' '.  $post . '</br>';
+				}*/
                 $Adminusers = new Adminusers();
                 $newAdminusers = $Adminusers->loadFromArray($_POST);
                 $newAdminusers->update();

@@ -88,22 +88,34 @@ class Adminusers extends BaseExampleModel
     */
     public function update()
     {
-        $sql = "UPDATE $this->tableName SET timestamp=:timestamp, login=:login, pass=:pass, role=:role, email=:email  WHERE id = :id";  
+        $sql = "UPDATE $this->tableName SET timestamp=:timestamp, login=:login, salt=:salt, pass=:pass, role=:role, email=:email  WHERE id = :id";  
         $st = $this->pdo->prepare ( $sql );
         $st->bindValue( ":timestamp", (new \DateTime('NOW'))->format('Y-m-d H:i:s'), \PDO::PARAM_STMT);
         $st->bindValue( ":login", $this->login, \PDO::PARAM_STR );
         
-        // Хеширование пароля
-        $this->salt = rand(0,1000000);
-        $st->bindValue( ":salt", $this->salt, \PDO::PARAM_STR );
-        $this->pass .= $this->salt;
-        $hashPass = password_hash($this->pass, PASSWORD_BCRYPT);
-        $st->bindValue( ":pass", $hashPass, \PDO::PARAM_STR );
         
-        $st->bindValue( ":role", $this->role, \PDO::PARAM_STR );
-        $st->bindValue( ":email", $this->email, \PDO::PARAM_STR );
-        $st->bindValue( ":id", $this->id, \PDO::PARAM_INT );
-        $st->execute();
+		if($this->pass)
+		{
+			// Хеширование пароля
+			$this->salt = rand(0,1000000);
+			$st->bindValue( ":salt", $this->salt, \PDO::PARAM_STR );
+			$this->pass .= $this->salt;
+			$hashPass = password_hash($this->pass, PASSWORD_BCRYPT);
+			$st->bindValue( ":pass", $hashPass, \PDO::PARAM_STR );
+		}else{
+			$sqlPass = "SELECT pass, salt from $this->tableName where id = $this->id";
+			$password = $this->pdo->query($sqlPass);
+			$pass = $password->fetch();
+			
+			$st->bindValue( ":pass", $pass['pass'], \PDO::PARAM_STR );
+			$st->bindValue( ":salt", $pass['salt'], \PDO::PARAM_STR );
+		}
+		
+		$st->bindValue( ":role", $this->role, \PDO::PARAM_STR );
+		$st->bindValue( ":email", $this->email, \PDO::PARAM_STR );
+		$st->bindValue( ":id", $this->id, \PDO::PARAM_INT );
+		$st->execute();
+		
     }
     
 }

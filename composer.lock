@@ -1,9 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
+    "hash": "700694f29cc78f24d02a832446f94a78",
     "content-hash": "d32593520b4f87072ddb2d36ce761d24",
     "packages": [
         {
@@ -52,7 +53,7 @@
                 "ArrayAccess",
                 "dotnotation"
             ],
-            "time": "2018-07-22T12:33:53+00:00"
+            "time": "2018-07-22 12:33:53"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -60,12 +61,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "35b2c9f2a91f9ad4e6a5210ee800a6a05edaeef3"
+                "reference": "cf86e51dd6331187c0a5dfe03d15ef7950199b63"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/35b2c9f2a91f9ad4e6a5210ee800a6a05edaeef3",
-                "reference": "35b2c9f2a91f9ad4e6a5210ee800a6a05edaeef3",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/cf86e51dd6331187c0a5dfe03d15ef7950199b63",
+                "reference": "cf86e51dd6331187c0a5dfe03d15ef7950199b63",
                 "shasum": ""
             },
             "require": {
@@ -117,7 +118,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2018-10-31T23:06:20+00:00"
+            "time": "2018-11-01 21:47:08"
         },
         {
             "name": "guzzlehttp/promises",
@@ -168,7 +169,7 @@
             "keywords": [
                 "promise"
             ],
-            "time": "2018-10-30T00:20:04+00:00"
+            "time": "2018-10-30 00:20:04"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -235,7 +236,7 @@
                 "uri",
                 "url"
             ],
-            "time": "2018-11-01T01:48:29+00:00"
+            "time": "2018-11-01 01:48:29"
         },
         {
             "name": "it-for-free/rusphp",
@@ -243,12 +244,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/it-for-free/rusphp.git",
-                "reference": "208c54be6050a530136e2a96d5cf6f6d66aefd6c"
+                "reference": "52799306c6b9d790925d62688c64aa285efeaf6d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/it-for-free/rusphp/zipball/208c54be6050a530136e2a96d5cf6f6d66aefd6c",
-                "reference": "208c54be6050a530136e2a96d5cf6f6d66aefd6c",
+                "url": "https://api.github.com/repos/it-for-free/rusphp/zipball/52799306c6b9d790925d62688c64aa285efeaf6d",
+                "reference": "52799306c6b9d790925d62688c64aa285efeaf6d",
                 "shasum": ""
             },
             "require": {
@@ -297,7 +298,7 @@
                 "source": "https://github.com/it-for-free/rusphp/tree/master",
                 "issues": "https://github.com/it-for-free/rusphp/issues"
             },
-            "time": "2018-10-31T10:12:12+00:00"
+            "time": "2018-11-02 16:47:15"
         },
         {
             "name": "it-for-free/simple-mvc",
@@ -305,15 +306,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/it-for-free/SimpleMVC.git",
-                "reference": "c369ef080b63ae7e3df48ab5a576c51b73aa25d9"
+                "reference": "276315a4e0fc77e1fa19cc6a2e6f7eea31d66f6c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/it-for-free/SimpleMVC/zipball/c369ef080b63ae7e3df48ab5a576c51b73aa25d9",
-                "reference": "c369ef080b63ae7e3df48ab5a576c51b73aa25d9",
+                "url": "https://api.github.com/repos/it-for-free/SimpleMVC/zipball/276315a4e0fc77e1fa19cc6a2e6f7eea31d66f6c",
+                "reference": "276315a4e0fc77e1fa19cc6a2e6f7eea31d66f6c",
                 "shasum": ""
             },
             "require": {
+                "ext-pdo_mysql": "*",
                 "it-for-free/rusphp": "dev-master",
                 "php": ">=7.2"
             },
@@ -336,7 +338,7 @@
                 "source": "https://github.com/it-for-free/SimpleMVC/tree/master",
                 "issues": "https://github.com/it-for-free/SimpleMVC/issues"
             },
-            "time": "2018-11-01T12:27:34+00:00"
+            "time": "2018-11-02 15:33:48"
         },
         {
             "name": "psr/http-message",
@@ -386,7 +388,7 @@
                 "request",
                 "response"
             ],
-            "time": "2016-08-06T14:39:51+00:00"
+            "time": "2016-08-06 14:39:51"
         },
         {
             "name": "ralouphie/getallheaders",
@@ -426,7 +428,7 @@
                 }
             ],
             "description": "A polyfill for getallheaders.",
-            "time": "2016-02-11T07:05:27+00:00"
+            "time": "2016-02-11 07:05:27"
         },
         {
             "name": "ralouphie/mimey",
@@ -466,7 +468,7 @@
                 }
             ],
             "description": "PHP package for converting file extensions to MIME types and vice versa.",
-            "time": "2017-01-27T20:57:22+00:00"
+            "time": "2017-01-27 20:57:22"
         },
         {
             "name": "ramsey/array_column",
@@ -511,7 +513,7 @@
                 "array_column",
                 "column"
             ],
-            "time": "2016-01-31T17:57:38+00:00"
+            "time": "2016-01-31 17:57:38"
         }
     ],
     "packages-dev": [],
