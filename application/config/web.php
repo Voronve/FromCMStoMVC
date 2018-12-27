@@ -28,7 +28,12 @@ $config = [
         ],
         'session' => [
             'class' => ItForFree\SimpleMVC\Session::class
-        ]
+        ],
+		'homepageNumArticles' => 5,
+		'admin' => [
+			'username' => 'admin',
+			'password' => 'thundu14'
+		]
     ]    
 ];
 
