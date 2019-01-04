@@ -18,7 +18,8 @@ function autoload($className)
         $fileName  .= str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR;
     }
     $fileName .= str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
-  
+	//echo $fileName;
+	//die;
     require $fileName;
 }
 

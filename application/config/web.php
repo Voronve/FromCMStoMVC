@@ -17,14 +17,14 @@ $config = [
         ],
         'mvc' => [
             'views' => [
-                'base-template-path' => '../application/views/',
-                'base-layouts-path' => '../application/views/layouts/',
+                'base-template-path' => '../application/CMSviews/',
+                'base-layouts-path' => '../application/CMSviews/layouts/',
                 'footer-path' => '',
                 'header-path' => ''
             ]
         ],
         'user' => [
-            'class' => \application\models\ExampleUser::class
+            'class' => \application\models\CMSUser::class
         ],
         'session' => [
             'class' => ItForFree\SimpleMVC\Session::class
