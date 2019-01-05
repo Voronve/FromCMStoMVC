@@ -29,12 +29,12 @@
               </td>
 			  <td>
 				<?php 
-                /*if(isset ($article->subcategoryId)) {
+                if(isset ($article->subcategoryId)) {
                     echo $results['subcategories'][$article->subcategoryId]->name;                        
                 }
-                else {*/
+                else {
                 echo "Без субкатегории";
-                /*}*/?>
+                }?>
 			  </td>
               <td>
                   
@@ -43,12 +43,12 @@
             <!--<?php echo "<pre>"; print_r ($results); echo "</pre>"; ?> Здесь есть доступ к полному объекту $results -->
              
                 <?php 
-                /*if(isset ($article->subcategoryId)) {
+                if(isset ($article->subcategoryId)) {
                     echo $results['categories'][$article->subcategoryId]->name;                        
                 }
-                else {*/
+                else {
                 echo "Без категории";
-                /*}*/?>
+                }?>
               </td>
 			  <td>
 			  <?php 

@@ -82,8 +82,10 @@ class CMSArticle extends \ItForFree\SimpleMVC\mvc\Model
 	 * @return Article|false Объект статьи или false, если запись не найдена или возникли проблемы
 	 */
 	public function getById($id, $tableName = '') {
+		$tableName = !empty($tableName) ? $tableName : $this->tableName;
+		
 		$sql = "SELECT *, UNIX_TIMESTAMP(publicationDate) "
-				. "AS publicationDate FROM articles WHERE id = :id";
+				. "AS publicationDate FROM $tableName WHERE id = :id";
 		$st = $this->pdo->prepare($sql);
 		$st->bindValue(":id", $id, \PDO::PARAM_INT);
 		$st->execute();

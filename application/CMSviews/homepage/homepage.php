@@ -1,7 +1,7 @@
 
 <ul id="headlines">
     <?php foreach ($results['articles'] as $article) { 
-		/*if ($article->active){*/?>
+		if ($article->active){?>
         <li class='<?php echo $article->id?>'>
             <h2>
                 <span class="pubDate">
@@ -12,7 +12,7 @@
                     <?php echo htmlspecialchars( $article->title )?>
                 </a>
                 
-                <?php /*if (isset($article->subcategoryId)) { ?>
+                <?php if (isset($article->subcategoryId)) { ?>
                     <span class="category">
                         in category
                         <a href=".?action=archive&amp;categoryId=<?php echo $article->subcategoryId?>">
@@ -26,11 +26,11 @@
                         </a>
                     </span>
                 <?php } 
-                else { */?>
+                else { ?>
                     <span class="category">
                         <?php echo "Без cубкатегории"?>
                     </span>
-                <?php /*}*/ ?>
+                <?php } ?>
             </h2>
             <p class="summary"><?php echo htmlspecialchars($article->summary)?></p>
 			<p class="content"><?php echo htmlspecialchars ($article->content) ?></p>
@@ -42,9 +42,9 @@
                 <li><a href=".?action=viewArticle&amp;articleId=<?php echo $article->id?>" class="">(POST) -- NEW</a></li>
                 <li><a href=".?action=viewArticle&amp;articleId=<?php echo $article->id?>" class="">(GET)  -- NEW</a></li>
             </ul>
-            <a href=".?action=viewArticle&amp;articleId=<?php echo $article->id?>" class="showContent" data-contentId="<?php echo $article->id?>">Показать полностью</a>
+            <a href="<?= \ItForFree\SimpleMVC\Url::link('CMSAdmin/viewArticle')?>&amp;articleId=<?php echo $article->id?>" class="showContent" data-contentId="<?php echo $article->id?>">Показать полностью</a>
         </li>
-	<?php }/*}*/?>
+	<?php }}?>
     </ul>
     <p><a href="./?action=archive">Article Archive</a></p>
 
