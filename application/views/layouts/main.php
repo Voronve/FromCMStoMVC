@@ -1,6 +1,6 @@
 <?php 
 use ItForFree\SimpleMVC\Config;
-
+use application\models\CMSCategory;
 
 $User = Config::getObject('core.user.class');
 

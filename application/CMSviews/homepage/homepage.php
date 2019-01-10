@@ -42,10 +42,10 @@
                 <li><a href=".?action=viewArticle&amp;articleId=<?php echo $article->id?>" class="">(POST) -- NEW</a></li>
                 <li><a href=".?action=viewArticle&amp;articleId=<?php echo $article->id?>" class="">(GET)  -- NEW</a></li>
             </ul>
-            <a href="<?= \ItForFree\SimpleMVC\Url::link('CMSAdmin/viewArticle')?>&amp;articleId=<?php echo $article->id?>" class="showContent" data-contentId="<?php echo $article->id?>">Показать полностью</a>
+            <a href="<?= \ItForFree\SimpleMVC\Url::link('CMSHomepage/viewArticle')?>&amp;articleId=<?php echo $article->id?>" class="showContent" data-contentId="<?php echo $article->id?>">Показать полностью</a>
         </li>
 	<?php }}?>
     </ul>
-    <p><a href="./?action=archive">Article Archive</a></p>
+    <p><a href="<?= \ItForFree\SimpleMVC\Url::link('CMSHomepage/archive')?>">Article Archive</a></p>
 
     

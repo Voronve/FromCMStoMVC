@@ -7,7 +7,10 @@ use ItForFree\SimpleMVC\Config;
  * Реализация класса user в соответствии с особенностями  My first CMS
  */
 
-class CMSUser extends \ItForFree\SimpleMVC\User{
+class CMSUser extends \ItForFree\SimpleMVC\User
+{
+	public $tableName = 'users';
+	public $orderBy = 'name ASC';
 	
 	/**
 	 * По сути - функция-заглушка т.к. в firstCMS есть только 1 админ, 

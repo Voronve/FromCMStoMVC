@@ -1,12 +1,13 @@
 <?php 
 use ItForFree\SimpleMVC\Config;
+use application\models\CMSCategory;
 
 $User = Config::getObject('core.user.class');
 
 ?>
 
 <?php include "includes/header.php" ?>
-<?php 
+<?php
 if( isset($_GET['route'])){
 	if($User->userName && 
 	   $User->userName != 'guest' && 

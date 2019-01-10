@@ -3,8 +3,6 @@
 namespace application\models;
 
 use ItForFree\SimpleMVC\Config as Config;
-use ItForFree\SimpleMVC\Application;
-use ItForFree\rusphp\Log\SimpleEchoLog;
 /**
  * Модель для работы со статьями
  */

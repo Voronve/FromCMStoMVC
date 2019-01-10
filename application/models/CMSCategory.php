@@ -2,9 +2,6 @@
 namespace application\models;
 
 use ItForFree\SimpleMVC\Config as Config;
-use ItForFree\SimpleMVC\Application;
-use ItForFree\rusphp\Log\SimpleEchoLog;
-
 /**
  * Класс для обработки категорий статей
  */
@@ -30,6 +27,10 @@ class CMSCategory extends \ItForFree\SimpleMVC\mvc\Model
     */
     public $description = null;
 
+	/**
+     *  @var string Имя поля по котору сортируем
+     */
+    public $orderBy = 'name ASC';
     /**
     * Устанавливаем свойства объекта с использованием значений из формы редактирования
     *
