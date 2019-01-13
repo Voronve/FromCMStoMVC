@@ -8,20 +8,20 @@
                     <?php echo date('j F', $article->publicationDate)?>
                 </span>
                 
-                <a href="<?= \ItForFree\SimpleMVC\Url::link('CMSAdmin/viewArticle')?>&amp;articleId=<?php echo $article->id?>">
+                <a href="<?= \ItForFree\SimpleMVC\Url::link('CMSHomepage/viewArticle')?>&amp;articleId=<?php echo $article->id?>">
                     <?php echo htmlspecialchars( $article->title )?>
                 </a>
                 
                 <?php if (isset($article->subcategoryId)) { ?>
                     <span class="category">
                         in category
-                        <a href=".?action=archive&amp;categoryId=<?php echo $article->subcategoryId?>">
+                        <a href="<?= \ItForFree\SimpleMVC\Url::link('CMSHomepage/archiveCat')?>&amp;subcategoryId=<?php echo $article->subcategoryId?>">
                             <?php echo htmlspecialchars($results['categories'][$article->subcategoryId]->name )?>
                         </a>
                     </span>
 					<span class="category">
                         in subcategory
-                        <a href=".?action=archiveSubcat&amp;subcategoryId=<?php echo $article->subcategoryId?>">
+                        <a href="<?= \ItForFree\SimpleMVC\Url::link('CMSHomepage/archiveSubcat')?>&amp;subcategoryId=<?php echo $article->subcategoryId?>">
                             <?php echo htmlspecialchars($results['subcategories'][$article->subcategoryId]->name )?>
                         </a>
                     </span>

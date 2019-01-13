@@ -81,10 +81,9 @@ class CMSArticle extends \ItForFree\SimpleMVC\mvc\Model
 	 */
 	public function getById($id, $tableName = '') {
 		$tableName = !empty($tableName) ? $tableName : $this->tableName;
-		
-		$sql = "SELECT *, UNIX_TIMESTAMP(publicationDate) "
-				. "AS publicationDate FROM $tableName WHERE id = :id";
+		$sql = "SELECT *, UNIX_TIMESTAMP(publicationDate) AS publicationDate FROM :tableName WHERE id = :id";
 		$st = $this->pdo->prepare($sql);
+		$st->bindValue(":tableName", $tableName, \PDO::PARAM_STR);
 		$st->bindValue(":id", $id, \PDO::PARAM_INT);
 		$st->execute();
 
@@ -196,25 +195,23 @@ class CMSArticle extends \ItForFree\SimpleMVC\mvc\Model
 	/**
 	 * Вставляем текущий объек Article в базу данных, устанавливаем его ID.
 	 */
-	/*public function insert() {
+	public function insert() {
 
 		// Есть уже у объекта Article ID?
 		if (!is_null($this->id))
 			trigger_error("Article::insert(): Attempt to insert an Article object that already has its ID property set (to $this->id).", E_USER_ERROR);
 
 		// Вставляем статью
-		$conn = new PDO(DB_DSN, DB_USERNAME, DB_PASSWORD);
 		$sql = "INSERT INTO articles ( publicationDate, title, summary, content, active, subcategoryId ) VALUES ( FROM_UNIXTIME(:publicationDate), :title, :summary, :content, :active, :subcategoryId )";
-		$st = $conn->prepare($sql);
-		$st->bindValue(":publicationDate", $this->publicationDate, PDO::PARAM_INT);
-		$st->bindValue(":title", $this->title, PDO::PARAM_STR);
-		$st->bindValue(":summary", $this->summary, PDO::PARAM_STR);
-		$st->bindValue(":content", $this->content, PDO::PARAM_STR);
-		$st->bindValue(":active", $this->active, PDO::PARAM_INT);
-		$st->bindValue(":subcategoryId", $this->subcategoryId, PDO::PARAM_INT);
+		$st = $this->pdo->prepare($sql);
+		$st->bindValue(":publicationDate", $this->publicationDate, \PDO::PARAM_INT);
+		$st->bindValue(":title", $this->title, \PDO::PARAM_STR);
+		$st->bindValue(":summary", $this->summary, \PDO::PARAM_STR);
+		$st->bindValue(":content", $this->content, \PDO::PARAM_STR);
+		$st->bindValue(":active", $this->active, \PDO::PARAM_INT);
+		$st->bindValue(":subcategoryId", $this->subcategoryId, \PDO::PARAM_INT);
 		$st->execute();
-		$this->id = $conn->lastInsertId();
-		$conn = null;
+		$this->id = $this->pdo->lastInsertId();
 	}
 
 	/**

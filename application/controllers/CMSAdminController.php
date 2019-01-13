@@ -6,6 +6,7 @@ use ItForFree\SimpleMVC\Url;
 use application\models\CMSArticle;
 use application\models\CMSCategory;
 use application\models\CMSSubcategory;
+use application\models\CMSConnection;
 use application\models\CMSAllUsers;
 
 class CMSAdminController extends \ItForFree\SimpleMVC\mvc\Controller
@@ -24,6 +25,8 @@ class CMSAdminController extends \ItForFree\SimpleMVC\mvc\Controller
 	
 	public $Users = null;
 	
+	public $Connection = null;
+	
 	/**
 	 * Инициализирует все сущности, необходимые для работы со статьями
 	 */
@@ -32,6 +35,7 @@ class CMSAdminController extends \ItForFree\SimpleMVC\mvc\Controller
 		$this->Category = new CMSCategory;
 		$this->Subcategory = new CMSSubcategory;
 		$this->Users = new CMSAllUsers;
+		$this->Connection = new CMSConnection;
 	}
 	
 	protected function getArticles(){
@@ -44,6 +48,12 @@ class CMSAdminController extends \ItForFree\SimpleMVC\mvc\Controller
 			$this->results['subcategories'][$subcategory->id] = $subcategory;
 			$this->results['categories'][$subcategory->id] = $this->Category->getById($subcategory->cat_id);
 		}
+		if (isset($_GET['status'])) {
+			if ($_GET['status'] == "changesSaved")
+				$this->results['statusMessage'] = "Your changes have been saved.";
+			if ($_GET['status'] == "categoryDeleted")
+				$this->results['statusMessage'] = "Category deleted.";
+		}
 	}
 	
 	public function indexAction(){
@@ -53,23 +63,6 @@ class CMSAdminController extends \ItForFree\SimpleMVC\mvc\Controller
 		$this->view->addVar('results', $this->results);
         $this->view->render('admin/admin.php');
     }
-	
-	public function viewArticleAction(){
-		$this->articlesData['id'] = $_GET['articleId'];
-		$Article = new CMSArticle();
-		$SingleArticle = $Article->getById($this->articlesData['id']);
-		$this->title = $SingleArticle->title . ' | ' . $this->title;
-		$this->results['article']['id'] = $SingleArticle->id;
-		$this->results['article']['title'] = $SingleArticle->title;
-		$this->results['article']['publicationDate'] = $SingleArticle->publicationDate;
-		$this->results['article']['subcategoryId'] = $SingleArticle->subcategoryId;
-		$this->results['article']['summary'] = $SingleArticle->summary;
-		$this->results['article']['content'] = $SingleArticle->content;
-		$this->results['article']['active'] = $SingleArticle->active;
-		$this->view->addVar('results', $this->results);
-		$this->view->addVar('title', $this->title);
-		$this->view->render('singleArticle/singleArticle.php');
-	}
 	
 	function listCategoriesAction() {
 		$this->initModelObjects();
@@ -154,6 +147,126 @@ class CMSAdminController extends \ItForFree\SimpleMVC\mvc\Controller
 
 		$this->view->addVar('results', $this->results);
 		$this->view->render('admin/listUsers.php');
+	}
+	
+	/**
+	* Редактирование статьи
+	* 
+	* @return null
+	*/
+   function editArticle() {
+	   
+
+	   $results = array();
+	   $activeAuthorsId = array();
+	   $results['pageTitle'] = "Edit Article";
+	   $results['formAction'] = "editArticle";
+
+	   if (isset($_POST['saveChanges'])) {
+
+		   // Пользователь получил форму редактирования статьи: сохраняем изменения
+		   if (!$article = Article::getById((int) $_POST['articleId'])) {
+			   header("Location: admin.php?error=articleNotFound");
+			   return;
+		   }
+		   if ($_POST['categoryId'] != Subcategory::getById($_POST['subcategoryId'])->cat_id) {
+			   header("Location: admin.php?error=CategoryNotMatch");
+			   return;
+		   }
+		   $article->storeFormValues($_POST);
+		   $article->update();
+
+		   //Удалаем предыдущие связи  и устанавливаем новые
+		   $connections = Connection::getById($article->id);
+		   foreach ($connections as $connection){
+			   $connection->delete();
+		   }
+		   $activeAuthorsId = $_POST['authorsId'];
+		   $connection = 0;
+		   foreach ($activeAuthorsId as $authorId) {
+			   $connData['article_id'] = $article->id;
+			   $connData['user_id'] = $authorId;
+			   $connection = new Connection($connData);
+			   $connection->insert();
+		   }
+		   header("Location: admin.php?status=changesSaved");
+	   } elseif (isset($_POST['cancel'])) {
+
+		   // Пользователь отказался от результатов редактирования: возвращаемся к списку статей
+		   header("Location: admin.php");
+	   } else {
+
+		   // Пользвоатель еще не получил форму редактирования: выводим форму
+		   $results['article'] = Article::getById((int) $_GET['articleId']);
+		   $data = Subcategory::getList();
+		   $results['subcategories'] = $data['results'];
+		   $data = Category::getList();
+		   $results['categories'] = $data['results'];
+		   $data = User::getlist();
+		   $results['users'] = $data['results'];
+		   $data = Connection::getById($results['article']->id);
+		   $results['authors'] = array();
+		   foreach($data as $connection){
+			   $results['authors'][] = $connection->userId;
+		   }
+		   $results['categoryIdCompare'] = Subcategory::getById($results['article']->subcategoryId)->cat_id;
+
+	   }
+		   require(TEMPLATE_PATH . "/admin/editArticle.php");
+   }
+   
+   
+   function newArticleAction() {
+	    $this->initModelObjects();
+		$this->results['pageTitle'] = "New Article";
+		$this->results['formAction'] = "newArticle";
+		$this->title = $this->results['pageTitle'];
+        
+		if (isset($_POST['saveChanges'])) {
+			//echo $_POST['categoryId'] . "<br>" . $this->Subcategory->getById($_POST['subcategoryId'])->cat_id; die;
+			if ($_POST['categoryId'] != $this->Subcategory->getById($_POST['subcategoryId'])->cat_id) {
+				$this->redirect(Url::link("CMSAdmin/index&error=CategoryNotMatch"));
+				//header("Location: admin.php?error=CategoryNotMatch");
+				return;
+			}
+			// Пользователь получает форму редактирования статьи: сохраняем новую статью
+			$this->Article->storeFormValues($_POST);      
+			$this->Article->insert();
+
+			//Сохраняем новые связи статья-авторы
+			$activeAuthorsId = $_POST['authorsId'];
+			$connData = array();
+			foreach ($activeAuthorsId as $authorId) 
+			{
+				$connData['article_id'] = $this->Article->id;
+				$connData['user_id'] = $authorId;
+				$this->Connection->__construct($connData);
+				$this->Connection->insert();
+			}
+			$this->redirect(Url::link("CMSAdmin/index&status=changesSaved"));
+			//header("Location: admin.php?status=changesSaved");
+		} elseif (isset($_POST['cancel'])) {
+
+			// Пользователь сбросил результаты редактирования: возвращаемся к списку статей
+			$this->redirect(Url::link("CMSAdmin/index"));
+			//header("Location: admin.php");
+		} else {
+
+			// Пользователь еще не получил форму редактирования: выводим форму
+			$this->results['article'] = $this->Article;
+			$data = $this->Category->getList();
+			$this->results['categories'] = $data['results'];
+			$data = $this->Subcategory->getList();
+			$this->results['subcategories'] = $data['results'];
+			$data = $this->Users->getlist();
+			$this->results['users'] = $data['results'];
+			$this->results['authors'] = array();
+			//
+			$this->results['categoryIdCompare'] = null;
+			$this->view->addVar('results', $this->results);
+			$this->view->addVar('title', $this->title);
+			$this->view->render('admin/edit/article.php');
+		}
 	}
 	
 }

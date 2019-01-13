@@ -5,6 +5,8 @@ use ItForFree\SimpleMVC\Config;
 use application\models\CMSArticle;
 use application\models\CMSCategory;
 use application\models\CMSSubcategory;
+use application\models\CMSConnection;
+use application\models\CMSAllUsers;
 
 class CMSHomepageController extends \ItForFree\SimpleMVC\mvc\Controller
 {
@@ -23,6 +25,10 @@ class CMSHomepageController extends \ItForFree\SimpleMVC\mvc\Controller
 	
 	public $Subcategory = null;
 	
+	public $Connection = null;
+	
+	public $Users = null;
+	
 	/**
 	 * Инициализирует все сущности, необходимые для работы со статьями
 	 */
@@ -30,6 +36,8 @@ class CMSHomepageController extends \ItForFree\SimpleMVC\mvc\Controller
 		$this->Article = new CMSArticle;
 		$this->Category = new CMSCategory;
 		$this->Subcategory = new CMSSubcategory;
+		$this->Connection = new CMSConnection();
+		$this->User = new CMSAllUsers();
 	}
 	
 	protected function getArticles(){
@@ -39,7 +47,8 @@ class CMSHomepageController extends \ItForFree\SimpleMVC\mvc\Controller
 		$this->results['subcategories'] = array();
 		foreach ( $this->articlesData['results'] as $subcategory ) { 
 			$this->results['subcategories'][$subcategory->id] = $subcategory;
-			$this->results['categories'][$subcategory->id] = $this->Category->getById($subcategory->cat_id);
+			$this->results['categories'][$subcategory->id] = $this->Category->
+					getById($subcategory->cat_id);
 		}
 	}
 	
@@ -49,7 +58,8 @@ class CMSHomepageController extends \ItForFree\SimpleMVC\mvc\Controller
     public function indexAction(){
 		$this->initModelObjects();
 		
-		$this->articlesData = $this->Article->getList(Config::get('core.homepageNumArticles'));
+		$this->articlesData = $this->Article->getList(
+				Config::get('core.homepageNumArticles'));
 		$this->getArticles();
 		foreach ( $this->results['articles'] as $article ) 
 		{ 
@@ -73,7 +83,18 @@ class CMSHomepageController extends \ItForFree\SimpleMVC\mvc\Controller
 		$this->results['article']['summary'] = $SingleArticle->summary;
 		$this->results['article']['content'] = $SingleArticle->content;
 		$this->results['article']['active'] = $SingleArticle->active;
-		$this->results['article']['subcategory'] = $this->Subcategory->getById($this->results['article']['subcategoryId']);
+		$this->results['article']['subcategory'] = $this->Subcategory->getById(
+				$this->results['article']['subcategoryId']);
+		//echo $this->results['article']['id']; die;
+		$connections = $this->Connection->getById( $this->results['article']['id'] );
+	    $connectionsCount = count($connections);
+	
+		foreach( $connections as $connection)
+		{
+			$userId = $connection->user_id;
+			$this->results['authors'][] = $this->User->getById($userId)->name;
+		}
+		$this->view->addVar('article', $SingleArticle);
 		$this->view->addVar('results', $this->results);
 		$this->view->addVar('title', $this->title);
 		$this->view->render('homepage/singleArticle.php');
@@ -100,9 +121,11 @@ class CMSHomepageController extends \ItForFree\SimpleMVC\mvc\Controller
 	function archiveCatAction() 
 	{
 		$this->initModelObjects();
-		$subcategoryId = ( isset( $_GET['subcategoryId'] ) && $_GET['subcategoryId'] ) ? (int)$_GET['subcategoryId'] : null;
+		$subcategoryId = ( isset( $_GET['subcategoryId'] ) && 
+				$_GET['subcategoryId'] ) ? (int)$_GET['subcategoryId'] : null;
 		$this->results['subcategory'] = $this->Subcategory->getById( $subcategoryId );
-		$this->results['category'] = $this->Category->getById( $this->results['subcategory']->cat_id );
+		$this->results['category'] = $this->Category->getById( 
+				$this->results['subcategory']->cat_id );
 		$data = $this->Subcategory->getList(1000000, $this->results['subcategory']->cat_id);
 		$articleArr = array();
 		foreach($data['results'] as $subcategory){
@@ -112,8 +135,10 @@ class CMSHomepageController extends \ItForFree\SimpleMVC\mvc\Controller
 		$this->results['articles'] = array();
 		$this->results['totalRows'] = 0;
 		for( $i = 0; $i < count($articleArr); $i++){
-			$this->results['articles'] = array_merge($this->results['articles'], $articleArr[$i]['results']);
-			$this->results['totalRows'] = $this->results['totalRows'] + $articleArr[$i]['totalRows'];
+			$this->results['articles'] = array_merge($this->results['articles'], 
+					$articleArr[$i]['results']);
+			$this->results['totalRows'] = $this->results['totalRows'] + 
+					$articleArr[$i]['totalRows'];
 		}
 		if($this->results['category']){
 			$this->results['pageHeading'] = $this->results['category']->name;
@@ -124,9 +149,55 @@ class CMSHomepageController extends \ItForFree\SimpleMVC\mvc\Controller
 		
 		$this->view->addVar('title', $this->title);
 		$this->view->addVar('results', $this->results);
-		/*Передаем также объект категори т.к. его методы унаследованы от 
+		/*Передаем также объект категории т.к. его методы унаследованы от 
 		 * родительского класса model и не являются статическими*/
 		$this->view->addVar('Category', $this->Category);
+		$this->view->render('homepage/archive.php');
+	}
+	
+	function archiveSubcatAction() 
+	{
+		//Инициализируем объекты моделей
+		$this->initModelObjects();
+		
+		/*Если в GET параметре передан id субкатегории, сохраняем его в переменной*/
+		$subcategoryId = ( isset( $_GET['subcategoryId'] ) && 
+				$_GET['subcategoryId'] ) ? (int)$_GET['subcategoryId'] : null;
+		
+		/* Так как мы выводим субкатегорию то пункт массива category нам не нужен
+		 и мы его обнуляем*/
+		$this->results['category'] = 0;
+		$this->results['subcategory'] = $this->Subcategory->getById( $subcategoryId );
+		$this->title = $this->results['subcategory']->name;
+		
+		/*Получаем список статей выбранной субкатегории и записываем в массив
+		В метод getList третим параметром мы передаем булево значение в true,
+		что означает, что передаваемый id принадлежит субкатегории а не категории*/
+		$articleArr = array();
+		$articleArr = $this->Article->getList( 100000, $this->results['subcategory'] ? 
+				$this->results['subcategory']->id : null, true );
+
+		$this->results['articles'] = $articleArr['results'];
+		$this->results['totalRows'] = $articleArr['totalRows'];
+
+		$SubcatObj = $this->Subcategory->getList();
+		$this->results['subcategories'] = array();
+
+		foreach ( $SubcatObj['results'] as $subcategory ) {
+			$this->results['subcategories'][$subcategory->id] = $subcategory;
+		}
+
+		$this->results['pageHeading'] = $this->results['subcategory'] ?  
+				$this->results['subcategory']->name : "Article Archive";
+		
+		$this->title = $this->results['pageHeading'] . " | Widget News";
+
+		$this->view->addVar('title', $this->title);
+		$this->view->addVar('results', $this->results);
+		
+		/*Передаем также объект субкатегории т.к. его методы унаследованы от 
+		 * родительского класса model и не являются статическими*/
+		$this->view->addVar('Subcategory', $this->Subcategory);
 		$this->view->render('homepage/archive.php');
 	}
 	

@@ -26,7 +26,7 @@
                     </span>
                     <span class="category">
                         in 
-                        <a href=".?action=archiveSubcat&amp;subcategoryId=<?php echo $article->subcategoryId?>">
+                        <a href="<?= \ItForFree\SimpleMVC\Url::link('CMSHomepage/archiveSubcat')?>&amp;subcategoryId=<?php echo $article->subcategoryId?>">
                             <?php echo htmlspecialchars( $results['subcategories'][$article->subcategoryId]->name ) ?>
                         </a>
                     </span>
