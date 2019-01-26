@@ -1,13 +1,15 @@
 
 <h1><?php echo $results['pageTitle'] ?></h1>
 
-<form action="<?= \ItForFree\SimpleMVC\Url::link('CMSAdmin/newArticle')?>" method="post">
-	<input type="hidden" name="articleId" value="<?php echo $results['article']->id ?>">
-
+<?php if (!isset($results['article']->id)){ ?>
+	<form action="<?= \ItForFree\SimpleMVC\Url::link('CMSAdmin/newArticle')?>" method="post">
+<?php }else{ ?> 
+	<form action="<?= \ItForFree\SimpleMVC\Url::link('CMSAdmin/editArticle')?>" method="post">
+		<input type="hidden" name="articleId" value="<?php echo $results['article']->id ?>">
+<?php } ?> 
 	<?php if (isset($results['errorMessage'])) { ?>
 		<div class="errorMessage"><?php echo $results['errorMessage'] ?></div>
 	<?php } ?>
-
 	<ul>
 		<li>
 			<label for="title">Article Title</label>
@@ -56,7 +58,7 @@
 		<li>
 			<label for="active" style="line-height: 0;">Activeness</label> 
 			<input style="width: auto;" type="checkbox" value="1" name="active" <?php
-			if ($results['article']->active /*|| $_GET['action'] == 'newArticle'*/) {
+			if ($results['article']->active) {
 				echo 'checked';
 			}
 			?>>	  
@@ -72,7 +74,7 @@
 </form>
 
 <?php if ($results['article']->id) { ?>
-	<p><a href="admin.php?action=deleteArticle&amp;articleId=<?php echo $results['article']->id ?>" onclick="return confirm('Delete This Article?')">
+	<p><a href="<?= \ItForFree\SimpleMVC\Url::link('CMSAdmin/deleteArticle')?>&amp;articleId=<?php echo $results['article']->id ?>" onclick="return confirm('Delete This Article?')">
 			Delete This Article
 		</a>
 	</p>

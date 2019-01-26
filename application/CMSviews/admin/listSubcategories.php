@@ -17,7 +17,7 @@
 
 	<?php foreach ($results['subcategories'] as $subcategory) { ?>
 
-		<tr onclick="location = 'admin.php?action=editSubcategory&amp;subcategoryId=<?php echo $subcategory->id ?>'">
+		<tr onclick="location = '<?= \ItForFree\SimpleMVC\Url::link('CMSAdmin/editSubcategory')?>&amp;subcategoryId=<?php echo $subcategory->id ?>'">
 			<td>
 				<?php echo $subcategory->name ?>
 			</td>
@@ -32,5 +32,5 @@
 
 <p><?php echo $results['totalRows'] ?> categor<?php echo ( $results['totalRows'] != 1 ) ? 'ies' : 'y' ?> in total.</p>
 
-<p><a href="admin.php?action=newSubcategory">Add a New Subcategory</a></p>
+<p><a href="<?= \ItForFree\SimpleMVC\Url::link('CMSAdmin/newSubcategory')?>">Add a New Subcategory</a></p>
 

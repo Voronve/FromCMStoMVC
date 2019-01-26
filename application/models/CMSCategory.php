@@ -47,20 +47,18 @@ class CMSCategory extends \ItForFree\SimpleMVC\mvc\Model
     * Вставляем текущий объект Category в базу данных и устанавливаем его свойство ID.
     */
 
-    public function insert() {
-
+    public function insert($tableName = '') {
       // У объекта Category уже есть ID?
       if ( !is_null( $this->id ) ) trigger_error ( "Category::insert(): Attempt to insert a Category object that already has its ID property set (to $this->id).", E_USER_ERROR );
 
+	  $tableName = !empty($tableName) ? $tableName : $this->tableName;
       // Вставляем категорию
-      $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
-      $sql = "INSERT INTO categories ( name, description ) VALUES ( :name, :description )";
-      $st = $conn->prepare ( $sql );
-      $st->bindValue( ":name", $this->name, PDO::PARAM_STR );
-      $st->bindValue( ":description", $this->description, PDO::PARAM_STR );
+      $sql = "INSERT INTO $tableName ( name, description ) VALUES ( :name, :description )";
+      $st = $this->pdo->prepare ( $sql );
+      $st->bindValue( ":name", $this->name, \PDO::PARAM_STR );
+      $st->bindValue( ":description", $this->description, \PDO::PARAM_STR );
       $st->execute();
-      $this->id = $conn->lastInsertId();
-      $conn = null;
+      $this->id = $this->pdo->lastInsertId();
     }
 
 
@@ -74,14 +72,12 @@ class CMSCategory extends \ItForFree\SimpleMVC\mvc\Model
       if ( is_null( $this->id ) ) trigger_error ( "Category::update(): Attempt to update a Category object that does not have its ID property set.", E_USER_ERROR );
 
       // Обновляем категорию
-      $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
       $sql = "UPDATE categories SET name=:name, description=:description WHERE id = :id";
-      $st = $conn->prepare ( $sql );
-      $st->bindValue( ":name", $this->name, PDO::PARAM_STR );
-      $st->bindValue( ":description", $this->description, PDO::PARAM_STR );
-      $st->bindValue( ":id", $this->id, PDO::PARAM_INT );
+      $st = $this->pdo->prepare( $sql );
+      $st->bindValue( ":name", $this->name,\PDO::PARAM_STR );
+      $st->bindValue( ":description", $this->description, \PDO::PARAM_STR );
+      $st->bindValue( ":id", $this->id, \PDO::PARAM_INT );
       $st->execute();
-      $conn = null;
     }
 
 
@@ -95,11 +91,9 @@ class CMSCategory extends \ItForFree\SimpleMVC\mvc\Model
       if ( is_null( $this->id ) ) trigger_error ( "Category::delete(): Attempt to delete a Category object that does not have its ID property set.", E_USER_ERROR );
 
       // Удаляем категорию
-      $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
-      $st = $conn->prepare ( "DELETE FROM categories WHERE id = :id LIMIT 1" );
-      $st->bindValue( ":id", $this->id, PDO::PARAM_INT );
+      $st = $this->pdo->prepare ( "DELETE FROM categories WHERE id = :id LIMIT 1" );
+      $st->bindValue( ":id", $this->id, \PDO::PARAM_INT );
       $st->execute();
-      $conn = null;
     }
 
 }

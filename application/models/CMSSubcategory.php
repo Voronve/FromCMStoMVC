@@ -9,11 +9,6 @@ class CMSSubcategory extends \ItForFree\SimpleMVC\mvc\Model
 {
 	
 	public $tableName = 'subcategories';
-	/**
-	 *
-	 * @var int ID подкатегории 
-	 */
-	public $id = null;
 	
 	/**
 	 *
@@ -75,14 +70,12 @@ class CMSSubcategory extends \ItForFree\SimpleMVC\mvc\Model
 	 * @param string $name Категория, которую выбрал пользователь
 	 * @return int идентификатор категории  
 	 */
-	public static function getCategIdByName($name){
-		$conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
+	public function getCategIdByName($name){
 		$sql = "SELECT id FROM categories WHERE name = :name";
-		$st = $conn->prepare($sql);
-		$st->bindValue(":name", $name, PDO::PARAM_STR);
+		$st = $this->pdo->prepare($sql);
+		$st->bindValue(":name", $name, \PDO::PARAM_STR);
 		$st->execute();
 		$row = $st->fetch();
-		$conn = null;
 		if($row){
 			return $row[0];
 		}
@@ -114,27 +107,23 @@ class CMSSubcategory extends \ItForFree\SimpleMVC\mvc\Model
 		// Проверяем есть ли уже у обьекта Subcategory ID ?
 		if ( !is_null( $this->id ) ) trigger_error ( "Subcategory::insert(): Attempt to insert a Subcategory object that already has its ID property set (to $this->id).", E_USER_ERROR );
 		//Вставляем субкатегорию
-		$conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
 		$sql = "INSERT INTO subcategories(name, cat_id) VALUES(:name, :cat_id)";
-		$st = $conn->prepare($sql);
-		$st->bindValue(":name", $this->name, PDO::PARAM_STR );
-		$st->bindValue(":cat_id", $this->cat_id, PDO::PARAM_INT );
+		$st = $this->pdo->prepare($sql);
+		$st->bindValue(":name", $this->name, \PDO::PARAM_STR );
+		$st->bindValue(":cat_id", $this->cat_id, \PDO::PARAM_INT );
 		$st->execute();
-		$this->id = $conn->lastInsertId();
-		$conn = null;
+		$this->id = $this->pdo->lastInsertId();
 	}
 	
 	public function update(){
 		// Проверяем есть ли уже у обьекта Subcategory ID ?
 		if ( is_null( $this->id ) ) trigger_error ( "Subcategory::insert(): Attempt to insert a Subcategory object that does not have its ID property set (to $this->id).", E_USER_ERROR );
-	    $conn = new PDO (DB_DSN, DB_USERNAME, DB_PASSWORD );
 		$sql = "UPDATE subcategories SET name=:name, cat_id=:cat_id WHERE id=:id";
-		$st = $conn->prepare($sql);
-		$st->bindValue(":name", $this->name, PDO::PARAM_STR);
-		$st->bindValue(":cat_id", $this->cat_id, PDO::PARAM_INT);
-		$st->bindValue(":id", $this->id, PDO::PARAM_INT);
+		$st = $this->pdo->prepare($sql);
+		$st->bindValue(":name", $this->name, \PDO::PARAM_STR);
+		$st->bindValue(":cat_id", $this->cat_id, \PDO::PARAM_INT);
+		$st->bindValue(":id", $this->id, \PDO::PARAM_INT);
 		$st->execute();
-		$conn = null;
 	}
 	
 	public function delete(){
@@ -142,11 +131,9 @@ class CMSSubcategory extends \ItForFree\SimpleMVC\mvc\Model
       if ( is_null( $this->id ) ) trigger_error ( "Subcategory::delete(): Attempt to delete a Subcategory object that does not have its ID property set.", E_USER_ERROR );
 
       // Удаляем подкатегорию
-      $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
-      $st = $conn->prepare ( "DELETE FROM subcategories WHERE id = :id LIMIT 1" );
-      $st->bindValue( ":id", $this->id, PDO::PARAM_INT );
+      $st = $this->pdo->prepare ( "DELETE FROM subcategories WHERE id = :id LIMIT 1" );
+      $st->bindValue( ":id", $this->id, \PDO::PARAM_INT );
       $st->execute();
-      $conn = null;
 		
 	}
 

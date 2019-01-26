@@ -56,5 +56,16 @@ class CMSConnection extends \ItForFree\SimpleMVC\mvc\Model{
       $conn = null;
     }
 	
+	/**
+    * Удаляем текущий объект связи из базы данных
+    */
+    public function delete() 
+    {
+        $st = $this->pdo->prepare("DELETE FROM $this->tableName WHERE "
+				. "article_id = :article_id AND user_id = :user_id LIMIT 1" );
+        $st->bindValue( ":article_id", $this->article_id, \PDO::PARAM_INT );
+		$st->bindValue( ":user_id", $this->user_id, \PDO::PARAM_INT );
+        $st->execute();
+    }   
 }
 

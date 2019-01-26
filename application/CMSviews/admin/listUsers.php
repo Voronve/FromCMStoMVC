@@ -17,7 +17,7 @@
             
     <?php foreach ( $results['users'] as $user ) { ?>
 
-            <tr onclick="location='admin.php?action=editUser&amp;userId=<?php echo $user->id?>'">
+            <tr onclick="location='<?= \ItForFree\SimpleMVC\Url::link('CMSAdmin/editUser')?>&amp;userId=<?php echo $user->id?>'">
               <td>
                 <?php echo $user->name?>
               </td>
@@ -39,4 +39,4 @@
 
           <p><?php echo $results['totalRows']?> user<?php echo ( $results['totalRows'] != 1 ) ? 's' : '' ?> in total.</p>
 
-          <p><a href="admin.php?action=newUser">Add a New User</a></p>
+          <p><a href="<?= \ItForFree\SimpleMVC\Url::link('CMSAdmin/newUser')?>">Add a New User</a></p>
