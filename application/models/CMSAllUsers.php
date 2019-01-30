@@ -59,7 +59,6 @@ class CMSAllUsers extends \ItForFree\SimpleMVC\mvc\Model{
 	/**
 	 * Вставляем текущий обьект Subcategory в базу данных и устанавливаем его свойство ID 
 	 */
-	
 	public function insert(){
 		// Проверяем есть ли уже у обьекта CMSAllUsers ID ?
 		if ( !is_null( $this->id ) ) trigger_error ( "CMSAllUsers->insert(): Attempt to insert a User object that already has its ID property set (to $this->id).", E_USER_ERROR );
@@ -76,7 +75,6 @@ class CMSAllUsers extends \ItForFree\SimpleMVC\mvc\Model{
 	/**
     * Обновляем текущий объект User в базе данных.
     */
-
     public function update() {
 
       // У объекта Category  есть ID?

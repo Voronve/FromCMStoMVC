@@ -29,6 +29,8 @@ class CMSAdminController extends \ItForFree\SimpleMVC\mvc\Controller
 	
 	/**
 	 * Инициализирует все сущности, необходимые для работы с методами контроллера
+	 * 
+	 * @return null
 	 */
 	protected function initModelObjects(){
 		$this->Article = new CMSArticle;
@@ -44,6 +46,8 @@ class CMSAdminController extends \ItForFree\SimpleMVC\mvc\Controller
 	/**
 	 * Получает данные о статьях а также категориях и субкатегориях к которым 
 	 * они принадлежат
+	 * 
+	 * @return null
 	 */
 	protected function getArticles(){
 		$this->articlesData = $this->Article->getList();
@@ -65,6 +69,8 @@ class CMSAdminController extends \ItForFree\SimpleMVC\mvc\Controller
 	
 	/**
 	 * Выводит страницу со списком статей
+	 * 
+	 * @return null
 	 */
 	public function indexAction(){
 		$this->initModelObjects();
@@ -163,6 +169,8 @@ class CMSAdminController extends \ItForFree\SimpleMVC\mvc\Controller
    
 	/**
 	 * Создание новой статьи
+	 * 
+	 * @return null
 	 */
     function newArticleAction() {
 	    $this->initModelObjects();
@@ -231,6 +239,8 @@ class CMSAdminController extends \ItForFree\SimpleMVC\mvc\Controller
 	
 	/**
 	 * Удаление выбранной статьи
+	 * 
+	 * @return null
 	 */
 	function deleteArticleAction() {
 		$this->initModelObjects();
@@ -244,7 +254,9 @@ class CMSAdminController extends \ItForFree\SimpleMVC\mvc\Controller
    /*----------------------Работа с объектом категорий -----------------------*/
    
 	/**
-	 * Выведение страницы со списком категорий 
+	 * Выведение страницы со списком категорий
+	 * 
+	 * @return null 
 	 */
 	function listCategoriesAction() {
 		$this->initModelObjects();
@@ -259,7 +271,9 @@ class CMSAdminController extends \ItForFree\SimpleMVC\mvc\Controller
 			if ($_GET['error'] == "categoryNotFound")
 				$this->results['errorMessage'] = "Error: Category not found.";
 			if ($_GET['error'] == "categoryContainsArticles")
-				$this->results['errorMessage'] = "Error: Category contains subcategories. Delete the subcategories, or assign them to another category, before deleting this category.";
+				$this->results['errorMessage'] = "Error: Category contains subcategories. "
+					. "Delete the subcategories, or assign them to another category, "
+					. "before deleting this category.";
 		}
 
 		if (isset($_GET['status'])) {
@@ -305,6 +319,11 @@ class CMSAdminController extends \ItForFree\SimpleMVC\mvc\Controller
 		}
 	}
 	
+	/**
+	 * Редактирование существующей категории
+	 * 
+	 * @return null
+	 */
 	function editCategoryAction() {
 		$this->initModelObjects();
 		$this->results['pageTitle'] = "Edit Article Category";
@@ -336,6 +355,11 @@ class CMSAdminController extends \ItForFree\SimpleMVC\mvc\Controller
 		}
 	}
 	
+	/**
+	 * Уделение категории
+	 * 
+	 * @return null
+	 */
 	function deleteCategoryAction() {
 		$this->initModelObjects();
 		if (!$category = $this->Category->getById((int) $_GET['categoryId'])) {
@@ -350,12 +374,14 @@ class CMSAdminController extends \ItForFree\SimpleMVC\mvc\Controller
 		$this->redirect(Url::link("CMSAdmin/listCategories&status=categoryDeleted"));
 	}
 	
+	/*--------------------Работа с объектом субкатегорий ---------------------*/
 	
-	
-	
-	
-	
-		function listSubcategoriesAction() {
+	/**
+	 * Выведение страницы со списком подкатегорий
+	 * 
+	 * @return null 
+	 */
+	function listSubcategoriesAction() {
 		$this->initModelObjects();
 		$data = $this->Subcategory->getList();
 		$this->results['subcategories'] = $data['results'];
@@ -372,7 +398,9 @@ class CMSAdminController extends \ItForFree\SimpleMVC\mvc\Controller
 			if ($_GET['error'] == "subcategoryNotFound")
 				$this->results['errorMessage'] = "Error: Subcategory not found.";
 			if ($_GET['error'] == "subcategoryContainsArticles")
-				$this->results['errorMessage'] = "Error: Subcategory contains articles. Delete the articles, or assign them to another subcategory, before deleting this subcategory.";
+				$this->results['errorMessage'] = "Error: Subcategory contains articles. "
+					. "Delete the articles, or assign them to another subcategory, "
+					. "before deleting this subcategory.";
 		}
 
 		if (isset($_GET['status'])) {
@@ -386,34 +414,11 @@ class CMSAdminController extends \ItForFree\SimpleMVC\mvc\Controller
 		$this->view->render('admin/listSubcategories.php');
 	}
 	
-	function listUsersAction() {
-		$this->initModelObjects();
-		$data = $this->Users->getList();
-		$this->results['users'] = $data['results'];
-		$this->results['totalRows'] = $data['totalRows'];
-		$this->results['pageTitle'] = "User list";
-		$this->title = $this->results['pageTitle'];
-		$this->view->addVar('title', $this->title);
-		if (isset($_GET['error'])) {
-			if ($_GET['error'] == "usersNotFound")
-				$this->results['errorMessage'] = "Error: User not found.";
-			if ($_GET['error'] == "userExist")
-				$this->results['errorMessage'] = "Error: User with such name is alredy exist.";
-		}
-
-		if (isset($_GET['status'])) {
-			if ($_GET['status'] == "changesSaved")
-				$this->results['statusMessage'] = "Your changes have been saved.";
-			if ($_GET['status'] == "userDeleted")
-				$this->results['statusMessage'] = "User deleted.";
-		}
-
-		$this->view->addVar('results', $this->results);
-		$this->view->render('admin/listUsers.php');
-	}
-	
-	
-	
+	/**
+	 *  Создание новой подкатегории
+	 * 
+	 * @return null
+	 */
 	function newSubcategoryAction() {
 		$this->initModelObjects();
 		$this->results['pageTitle'] = "New Article Subcategory";
@@ -449,6 +454,11 @@ class CMSAdminController extends \ItForFree\SimpleMVC\mvc\Controller
 		}
 	}
 	
+	/**
+	 * Редактирование существующей подкатегории
+	 * 
+	 * @return null
+	 */
 	function editSubcategoryAction() {
 		$this->initModelObjects();
 		$this->results['pageTitle'] = "Edit Article Subcategory";
@@ -485,6 +495,11 @@ class CMSAdminController extends \ItForFree\SimpleMVC\mvc\Controller
 		}
 	}
 	
+	/**
+	 * Удаление подкатегории
+	 * 
+	 * @return null
+	 */
 	function deleteSubcategoryAction() {
 		$this->initModelObjects();
 		if (!$subcategory = $this->Subcategory->getById((int) $_GET['subcategoryId'])) {
@@ -501,6 +516,44 @@ class CMSAdminController extends \ItForFree\SimpleMVC\mvc\Controller
 		$this->redirect(Url::link("CMSAdmin/listSubcategories&status=subcategoryDeleted"));
 	}
 	
+	/*--------------------Работа с объектом пользователей ---------------------*/
+	
+	/**
+	 * Выведение страницы со списком пользователей 
+	 * 
+	 * @return null 
+	 */
+	function listUsersAction() {
+		$this->initModelObjects();
+		$data = $this->Users->getList();
+		$this->results['users'] = $data['results'];
+		$this->results['totalRows'] = $data['totalRows'];
+		$this->results['pageTitle'] = "User list";
+		$this->title = $this->results['pageTitle'];
+		$this->view->addVar('title', $this->title);
+		if (isset($_GET['error'])) {
+			if ($_GET['error'] == "usersNotFound")
+				$this->results['errorMessage'] = "Error: User not found.";
+			if ($_GET['error'] == "userExist")
+				$this->results['errorMessage'] = "Error: User with such name is alredy exist.";
+		}
+
+		if (isset($_GET['status'])) {
+			if ($_GET['status'] == "changesSaved")
+				$this->results['statusMessage'] = "Your changes have been saved.";
+			if ($_GET['status'] == "userDeleted")
+				$this->results['statusMessage'] = "User deleted.";
+		}
+
+		$this->view->addVar('results', $this->results);
+		$this->view->render('admin/listUsers.php');
+	}
+	
+	/**
+	 *  Добавление нового пользователя
+	 * 
+	 * @return null
+	 */
 	function newUserAction() {
 		$this->initModelObjects();
 		$this->results['pageTitle'] = "Add new user";
@@ -529,6 +582,11 @@ class CMSAdminController extends \ItForFree\SimpleMVC\mvc\Controller
 		}
 	}
 	
+	/**
+	 * Редактирование существующего пользователя
+	 * 
+	 * @return null
+	 */
 	function editUserAction() {
 		$this->initModelObjects();
 		$this->results['pageTitle'] = "Edit User";
@@ -556,6 +614,11 @@ class CMSAdminController extends \ItForFree\SimpleMVC\mvc\Controller
 		}
 	}
 	
+	/**
+	 * Удаление пользователя
+	 * 
+	 * @return null
+	 */
 	function deleteUserAction() {
 		$this->initModelObjects();
 		if (!$user = $this->Users->getById((int) $_GET['userId'])) {

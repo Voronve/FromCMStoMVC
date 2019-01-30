@@ -88,7 +88,18 @@ class CMSArticle extends \ItForFree\SimpleMVC\mvc\Model
 	}
 
 	
-        
+    /**
+	 * Возвращаем все статьи из базы данных и их количество
+	 * 
+	 * @param int $numRows Количество возвращаемых объектов(по умолчанию all)
+	 * @param int $categoryId если передан этот параметр, извлекаем только 
+	 * статьи категории с таким же id
+	 * @param bool $isSubcategory если передается значение true, значит предыдущим
+	 * параметром был передан id субкатегории а не категории
+	 * @param string $order порядок сортировки объектов(по умолчанию "publicationDate DESC")
+	 * @return array|false возвращаем либо неудачу либо массив из 2-х элементов:
+	 * массив с искомыми объектами субкатегорий и их количество  
+	 */
     public function getList($numRows=1000000, $categoryId = null, $isSubcategory = null, $order = "publicationDate DESC")  
     {
 		if (!$isSubcategory) {
@@ -125,9 +136,6 @@ class CMSArticle extends \ItForFree\SimpleMVC\mvc\Model
         return (array ("results" => $list, "totalRows" => $totalRows[0]));
     }
 
-	/**
-	 * Вставляем текущий объект статьи в базу данных, устанавливаем его свойства.
-	 */
 
 	/**
 	 * Вставляем текущий объек Article в базу данных, устанавливаем его ID.

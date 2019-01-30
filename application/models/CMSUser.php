@@ -28,7 +28,7 @@ class CMSUser extends \ItForFree\SimpleMVC\User
 		
 	}
 	/**
-	 * 
+	 * Проверка соответствия имени пользователя и пароля
 	 * @param string $login 
 	 * @param string $pass
 	 * @return boolean

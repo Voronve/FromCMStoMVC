@@ -105,7 +105,9 @@ class CMSSubcategory extends \ItForFree\SimpleMVC\mvc\Model
 	
 	public function insert(){
 		// Проверяем есть ли уже у обьекта Subcategory ID ?
-		if ( !is_null( $this->id ) ) trigger_error ( "Subcategory::insert(): Attempt to insert a Subcategory object that already has its ID property set (to $this->id).", E_USER_ERROR );
+		if ( !is_null( $this->id ) ) trigger_error ( "Subcategory::insert(): "
+				. "Attempt to insert a Subcategory object that already has its "
+				. "ID property set (to $this->id).", E_USER_ERROR );
 		//Вставляем субкатегорию
 		$sql = "INSERT INTO subcategories(name, cat_id) VALUES(:name, :cat_id)";
 		$st = $this->pdo->prepare($sql);
@@ -115,9 +117,15 @@ class CMSSubcategory extends \ItForFree\SimpleMVC\mvc\Model
 		$this->id = $this->pdo->lastInsertId();
 	}
 	
+	/**
+	 * Обновляем уже существующий в базе данных объект подкатегории
+	 */
+	
 	public function update(){
 		// Проверяем есть ли уже у обьекта Subcategory ID ?
-		if ( is_null( $this->id ) ) trigger_error ( "Subcategory::insert(): Attempt to insert a Subcategory object that does not have its ID property set (to $this->id).", E_USER_ERROR );
+		if ( is_null( $this->id ) ) trigger_error ( "Subcategory::insert(): "
+				. "Attempt to insert a Subcategory object that does not have its "
+				. "ID property set (to $this->id).", E_USER_ERROR );
 		$sql = "UPDATE subcategories SET name=:name, cat_id=:cat_id WHERE id=:id";
 		$st = $this->pdo->prepare($sql);
 		$st->bindValue(":name", $this->name, \PDO::PARAM_STR);
@@ -126,9 +134,15 @@ class CMSSubcategory extends \ItForFree\SimpleMVC\mvc\Model
 		$st->execute();
 	}
 	
+	/**
+	 * Удааляем подкатегорию
+	 */
+	
 	public function delete(){
 		// У объекта Subcategory  есть ID?
-      if ( is_null( $this->id ) ) trigger_error ( "Subcategory::delete(): Attempt to delete a Subcategory object that does not have its ID property set.", E_USER_ERROR );
+      if ( is_null( $this->id ) ) trigger_error ( "Subcategory::delete(): "
+			  . "Attempt to delete a Subcategory object that does not have its "
+			  . "ID property set.", E_USER_ERROR );
 
       // Удаляем подкатегорию
       $st = $this->pdo->prepare ( "DELETE FROM subcategories WHERE id = :id LIMIT 1" );

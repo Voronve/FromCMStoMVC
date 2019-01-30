@@ -13,7 +13,7 @@
                     <span class="pubDate">
                         <?php echo date('j F Y', $article->publicationDate)?>
                     </span>
-                    <a href=".?action=viewArticle&amp;articleId=<?php echo $article->id?>">
+                    <a href="<?= \ItForFree\SimpleMVC\Url::link('CMSHomepage/viewArticle')?>&amp;articleId=<?php echo $article->id?>">
                         <?php echo htmlspecialchars( $article->title )?>
                     </a>
 

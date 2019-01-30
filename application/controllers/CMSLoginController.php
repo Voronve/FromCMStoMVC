@@ -6,7 +6,8 @@ use ItForFree\SimpleMVC\Url;
 /**
  *  Класс для авторизации админа и пользователей
  */
-class CMSLoginController extends \ItForFree\SimpleMVC\mvc\Controller{
+class CMSLoginController extends \ItForFree\SimpleMVC\mvc\Controller
+{
 	
 	public $layoutPath = 'main.php';
 	

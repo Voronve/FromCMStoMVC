@@ -30,7 +30,7 @@ class CMSHomepageController extends \ItForFree\SimpleMVC\mvc\Controller
 	public $Users = null;
 	
 	/**
-	 * Инициализирует все сущности, необходимые для работы со статьями
+	 * Инициализирует все сущности, необходимые для работы контроллера
 	 */
 	protected function initModelObjects(){
 		$this->Article = new CMSArticle;
@@ -71,6 +71,9 @@ class CMSHomepageController extends \ItForFree\SimpleMVC\mvc\Controller
         $this->view->render('homepage/homepage.php');
     }
 	
+	/**
+	 *  Выводит краткое описание статьи на главной странице
+	 */
 	public function viewArticleAction(){
 		$this->initModelObjects();
 		$this->articlesData['id'] = $_GET['articleId'];
@@ -85,7 +88,6 @@ class CMSHomepageController extends \ItForFree\SimpleMVC\mvc\Controller
 		$this->results['article']['active'] = $SingleArticle->active;
 		$this->results['article']['subcategory'] = $this->Subcategory->getById(
 				$this->results['article']['subcategoryId']);
-		//echo $this->results['article']['id']; die;
 		$connections = $this->Connection->getById( $this->results['article']['id'] );
 	    $connectionsCount = count($connections);
 	
@@ -100,9 +102,11 @@ class CMSHomepageController extends \ItForFree\SimpleMVC\mvc\Controller
 		$this->view->render('homepage/singleArticle.php');
 	}
 	
+	/**
+	 *  Выводит главную страницу архива статей
+	 */
 	public function archiveAction(){
 		$this->initModelObjects();
-		
 		$this->articlesData = $this->Article->getList(100000);
 		$this->getArticles();
 		$this->results['category'] = 0;
@@ -112,12 +116,16 @@ class CMSHomepageController extends \ItForFree\SimpleMVC\mvc\Controller
 		
 		$this->view->addVar('title', $this->title);
 		$this->view->addVar('results', $this->results);
-		/*Передаем также объект категори т.к. его методы унаследованы от 
+		/*Передаем также объект категории т.к. его методы унаследованы от 
 		 * родительского класса model и не являются статическими*/
 		$this->view->addVar('Category', $this->Category);
 		$this->view->render('homepage/archive.php');
 	}
 	
+	/**
+	 *  Выводит на странице архива список статей соответствующих определенной
+	 * категории 
+	 */
 	function archiveCatAction() 
 	{
 		$this->initModelObjects();
@@ -131,9 +139,9 @@ class CMSHomepageController extends \ItForFree\SimpleMVC\mvc\Controller
 		foreach($data['results'] as $subcategory){
 			$articleArr[] = $this->Article->getList(100000, $subcategory->id, true);
 		}
-
 		$this->results['articles'] = array();
 		$this->results['totalRows'] = 0;
+		
 		for( $i = 0; $i < count($articleArr); $i++){
 			$this->results['articles'] = array_merge($this->results['articles'], 
 					$articleArr[$i]['results']);
@@ -155,6 +163,11 @@ class CMSHomepageController extends \ItForFree\SimpleMVC\mvc\Controller
 		$this->view->render('homepage/archive.php');
 	}
 	
+	
+	/**
+	 * Выводит на странице архива список статей соответствующих определенной
+	 * подкатегории
+	 */
 	function archiveSubcatAction() 
 	{
 		//Инициализируем объекты моделей
