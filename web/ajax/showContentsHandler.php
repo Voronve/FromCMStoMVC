@@ -1,11 +1,13 @@
 <?php
-require ('../config.php');
+use application\models\CMSArticle;
+
+$CMSArticle = new CMSArticle();
 
 if (isset($_GET['articleId'])) {
-    $article = Article::getById((int)$_GET['articleId']);
+    $article = $CMSArticle->getById((int)$_GET['articleId']);
     echo json_encode($article);
 }else if (isset($_POST['articleId'])) {
-    $article = Article::getById( $_POST['articleId'] );
+    $article = $CMSArticle->getById( $_POST['articleId'] );
     echo json_encode($article);
 //        die("Привет)");
 //    $conn = new PDO( DB_DSN, DB_USERNAME, DB_PASSWORD );
