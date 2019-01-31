@@ -15,7 +15,7 @@ function init_get()
         showLoaderIdentity();
         $.ajax({
             method: "GET",
-            url:'/ajax/showContentsHandler.php?articleId=' + contentId, 
+            url:'../ajax/showContentsHandler.php?articleId=' + contentId, 
             dataType: 'json'
         })
         .done (function(obj){

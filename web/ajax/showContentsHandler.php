@@ -1,9 +1,10 @@
 <?php
 use application\models\CMSArticle;
 
-$CMSArticle = new CMSArticle();
+$CMSArticle = new CMSArticle;
 
 if (isset($_GET['articleId'])) {
+	
     $article = $CMSArticle->getById((int)$_GET['articleId']);
     echo json_encode($article);
 }else if (isset($_POST['articleId'])) {
