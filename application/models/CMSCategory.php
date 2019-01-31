@@ -65,7 +65,6 @@ class CMSCategory extends \ItForFree\SimpleMVC\mvc\Model
     /**
     * Обновляем текущий объект Category в базе данных.
     */
-
     public function update() {
 
       // У объекта Category  есть ID?
@@ -84,7 +83,6 @@ class CMSCategory extends \ItForFree\SimpleMVC\mvc\Model
     /**
     * Удаляем текущий объект Category из базы данных.
     */
-
     public function delete() {
 
       // У объекта Category  есть ID?
